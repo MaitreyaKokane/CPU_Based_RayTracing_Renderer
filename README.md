@@ -1,6 +1,76 @@
-# Walnut App Template
+RAYTRACER (VULKAN + WALNUT)
 
-This is a simple app template for [Walnut](https://github.com/TheCherno/Walnut) - unlike the example within the Walnut repository, this keeps Walnut as an external submodule and is much more sensible for actually building applications. See the [Walnut](https://github.com/TheCherno/Walnut) repository for more details.
+A real-time, interactive ray tracer built in C++ on top of the Walnut application template.
+Walnut provides the Vulkan renderer + windowing + ImGui-based tooling so the project can focus
+on ray tracing logic (per-pixel rendering, camera, materials, etc.).  
 
-## Getting Started
-Once you've cloned, you can customize the `premake5.lua` and `WalnutApp/premake5.lua` files to your liking (eg. change the name from "WalnutApp" to something else).  Once you're happy, run `scripts/Setup.bat` to generate Visual Studio 2022 solution/project files. Your app is located in the `WalnutApp/` directory, which some basic example code to get you going in `WalnutApp/src/WalnutApp.cpp`. I recommend modifying that WalnutApp project to create your own application, as everything should be setup and ready to go.
+--------------------------------------------------------------------------------
+PROJECT OVERVIEW
+
+This project is created using the Walnut app template (Walnut kept as an external submodule),
+and implements a ray tracer as a desktop application. 
+
+Typical workflow:
+- Update camera / UI
+- Ray trace into an image buffer
+- Present the image in a Walnut viewport (Vulkan-backed)
+
+--------------------------------------------------------------------------------
+KEY FEATURES (CURRENT / INTENDED)
+
+- Interactive viewport (Walnut)
+- CPU ray tracing loop (per-pixel shading) rendered into a framebuffer
+- UI controls for parameters (via Walnut/ImGui)
+- Easy iteration using Premake + Visual Studio solution generation
+
+Note:
+Exact rendering features (materials, bounces, BVH, etc.) depend on the current implementation.
+This README is structured so you can expand the "FEATURES" section as you add more.
+
+--------------------------------------------------------------------------------
+REPOSITORY LAYOUT
+
+/ RayTracer/        -> Main application (your ray tracer code)
+/ Walnut/           -> Walnut framework as a git submodule 
+/ scripts/          -> Setup scripts (Premake generation, dependencies, etc.) 
+  premake5.lua      -> Premake workspace configuration 
+--------------------------------------------------------------------------------
+PREREQUISITES (RECOMMENDED)
+
+- Windows 10/11
+- Visual Studio 2022
+- Git (with submodules)
+- Vulkan-capable GPU + drivers (Walnut uses Vulkan)
+
+--------------------------------------------------------------------------------
+BUILD & RUN (WINDOWS)
+
+1) Clone with submodules:
+   git clone --recursive https://github.com/MaitreyaKokane/RayTracer-with-vulkan.git
+
+   If you already cloned without --recursive:
+   git submodule update --init --recursive
+
+2) Generate Visual Studio project files:
+   scripts\Setup.bat 
+
+3) Open the generated Visual Studio 2022 solution and build.
+4) Run the RayTracer application from Visual Studio.
+
+
+
+--------------------------------------------------------------------------------
+CREDITS
+- Credits:
+- This ray tracer was implemented by following The Cherno’s Ray Tracing tutorial series (YouTube).
+- Application framework: Walnut / Walnut App Template by StudioCherno (The Cherno).
+- Walnut framework provides the Vulkan + ImGui application layer.
+
+--------------------------------------------------------------------------------
+LICENSE
+
+MIT License.
+
+--------------------------------------------------------------------------------
+LINKS
+- Template source: StudioCherno/WalnutAppTemplate .
