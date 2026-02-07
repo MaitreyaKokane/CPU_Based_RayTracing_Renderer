@@ -4,6 +4,9 @@
 #include "Ray.h"
 #include "Camera.h"
 #include "Scene.h"
+#include <execution>
+
+using namespace std;
 
 namespace Utils
 {	
@@ -43,6 +46,17 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 	delete[] m_AccumulateData;
 	m_AccumulateData = new glm::vec4[width * height];
+
+	m_ImageHorizontalIter.resize(width);
+	m_ImageVerticalIter.resize(height);
+	for(uint32_t i = 0; i < width ; i++)
+	{
+		m_ImageHorizontalIter[i] = i;
+	}
+	for(uint32_t i = 0; i < height ; i++)
+	{
+		m_ImageVerticalIter[i] = i;
+	}
 }
 
 void Renderer::Render(const Scene& scene, const Camera& camera)
@@ -53,6 +67,30 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 	{
 		memset(m_AccumulateData,0,m_FinalImage->GetWidth() * m_FinalImage->GetHeight() * sizeof(glm::vec4));
 	}
+
+ #define MT 1
+ #if MT
+
+	for_each(std::execution::par, m_ImageVerticalIter.begin(), m_ImageVerticalIter.end(),
+	[this](uint32_t y) 
+	{
+		for_each(std::execution::par , m_ImageHorizontalIter.begin(), m_ImageHorizontalIter.end(),
+		[this, y](uint32_t x) 
+		{
+				glm::vec4 color = RayGen(x, y);
+				m_AccumulateData[x + y * m_FinalImage->GetWidth()] += color;
+
+				glm::vec4 accumulateColor = m_AccumulateData[x + y * m_FinalImage->GetWidth()];
+				accumulateColor /= (float)m_FrameIndex;
+
+				accumulateColor = glm::clamp(accumulateColor, glm::vec4(0.0f), glm::vec4(1.0f));
+				m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(accumulateColor);
+		});
+
+	});
+
+ #else
+
 	for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
 	{
 		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
@@ -67,12 +105,15 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(accumulateColor);
 		}
 	}
+
+ #endif
 	m_FinalImage->SetData(m_ImageData);
 
 	if (m_Settings.Accumulate)
 		m_FrameIndex++;
 	else
 		m_FrameIndex = 1;
+
 }
 
 glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
@@ -90,7 +131,7 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 		Renderer::HitPayload payload = TraceRay(ray);
 		if (payload.HitDistance < 0.0f)
 		{
-			glm:: vec3 skyColor = glm::vec3(0,0,0);
+			glm:: vec3 skyColor = glm::vec3(0.72156863f, 0.83137255f, 0.88627451f);
 			color += skyColor * multiplier;
 			break;
 		}
