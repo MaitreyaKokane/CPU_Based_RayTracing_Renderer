@@ -66,10 +66,7 @@ CREDITS
 - Application framework: Walnut / Walnut App Template by StudioCherno (The Cherno).
 - Walnut framework provides the Vulkan + ImGui application layer.
 
---------------------------------------------------------------------------------
-LICENSE
 
-MIT License.
 
 --------------------------------------------------------------------------------
 LINKS
