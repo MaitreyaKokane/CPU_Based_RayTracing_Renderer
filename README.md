@@ -1,6 +1,6 @@
 RAYTRACER (VULKAN + WALNUT)
 
-A real-time, interactive ray tracer built in C++ on top of the Walnut application template.
+LumaRT is a real-time, interactive ray tracer built in C++ on top of the Walnut application template.
 Walnut provides the Vulkan renderer + windowing + ImGui-based tooling so the project can focus
 on ray tracing logic (per-pixel rendering, camera, materials, etc.).  
 
@@ -46,7 +46,7 @@ PREREQUISITES (RECOMMENDED)
 BUILD & RUN (WINDOWS)
 
 1) Clone with submodules:
-   git clone --recursive https://github.com/MaitreyaKokane/CPU_Based_RayTracing_Renderer.git
+   git clone --recursive https://github.com/MaitreyaKokane/LumaRT.git
 
    If you already cloned without --recursive:
    git submodule update --init --recursive
