@@ -55,7 +55,7 @@ BUILD & RUN (WINDOWS)
    scripts\Setup.bat 
 
 3) Open the generated Visual Studio 2022 solution and build.
-4) Run the RayTracer application from Visual Studio.
+4) First Build RayTracer.sln then run the RayTracer.sln or RayTracer/src/WalnutApp.cpp from Visual Studio.
 
 
 
