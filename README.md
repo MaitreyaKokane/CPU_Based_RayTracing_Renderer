@@ -22,6 +22,9 @@ KEY FEATURES (CURRENT / INTENDED)
 - CPU ray tracing loop (per-pixel shading) rendered into a framebuffer
 - UI controls for parameters (via Walnut/ImGui)
 - Easy iteration using Premake + Visual Studio solution generation
+  
+  <img width="838" height="519" alt="Screenshot 2026-04-12 033317" src="https://github.com/user-attachments/assets/c07699f2-2c09-4e78-9371-f3beff5819f6" />
+
 
 Note:
 Exact rendering features (materials, bounces, BVH, etc.) depend on the current implementation.
