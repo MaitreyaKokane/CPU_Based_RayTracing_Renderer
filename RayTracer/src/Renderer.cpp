@@ -74,7 +74,7 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 	for_each(std::execution::par, m_ImageVerticalIter.begin(), m_ImageVerticalIter.end(),
 	[this](uint32_t y) 
 	{
-		for_each(std::execution::par , m_ImageHorizontalIter.begin(), m_ImageHorizontalIter.end(),
+		for_each(std::execution::seq , m_ImageHorizontalIter.begin(), m_ImageHorizontalIter.end(),
 		[this, y](uint32_t x) 
 		{
 				glm::vec4 color = RayGen(x, y);
@@ -123,7 +123,7 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 	ray.Direction = m_ActiveCamera->GetRayDirections()[x + y * m_FinalImage->GetWidth()];
 	
 	glm::vec3 light(0.0f);
-	glm::vec3 throughtput(1.0f);
+	glm::vec3 throughput(1.0f);
 
 	int bounces = 5;
 	for (int i = 0; i < bounces; i++)
@@ -131,8 +131,7 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 		Renderer::HitPayload payload = TraceRay(ray);
 		if (payload.HitDistance < 0.0f)
 		{
-			glm:: vec3 skyColor = glm::vec3(0.72156863f, 0.83137255f, 0.88627451f);
-			//light += skyColor * throughtput;
+			light += m_Settings.SkyColor * throughput;
 			break;
 		}
 
@@ -142,13 +141,18 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 		const Material& material = m_ActiveScene->Material[sphere.MaterialIndex];
 
 
-		throughtput *=  material.Albedo;
+		throughput *=  material.Albedo;
+		if (m_Settings.EnableEmission) 
+		{
+			light += material.GetEmission();
+		}
+		float p = glm::max(throughput.r, glm::max(throughput.g, throughput.b));
+		if (Walnut::Random::Float() > p)
+			break;
+		throughput /= p;
 
-		light += material.GetEmission();
-
-			ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
-			//ray.Direction = glm::reflect(ray.Direction, payload.WorldNormal + material.Roughness * Walnut::Random::Vec3(-0.5f,0.5f) );
-			ray.Direction = glm:: normalize(payload.WorldNormal + Walnut::Random::InUnitSphere());
+		ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
+		ray.Direction = glm::normalize(payload.WorldNormal + Walnut::Random::InUnitSphere());
 	}
 	return glm::vec4(light, 1.0f);
 }
@@ -166,16 +170,11 @@ Renderer::HitPayload Renderer::TraceRay(const Ray& ray)
 		const Sphere& sphere = m_ActiveScene->Sphere[i];
 		glm::vec3 origin = ray.Origin - sphere.Position;
 
-		float a = glm::dot(ray.Direction, ray.Direction);
-		float b = 2.0f * glm::dot(origin, ray.Direction);
+		float b = glm::dot(origin, ray.Direction); 
 		float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
-
-		float discriminant = b * b - 4.0f * a * c;
-		if (discriminant < 0.0f)
-			continue;
-
-
-		float closestT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
+		float discriminant = b * b - c;           
+		if (discriminant < 0.0f) continue;
+		float closestT = -b - glm::sqrt(discriminant);
 		if (closestT> 0.0f && closestT < hitDistance) 
 		{
 			hitDistance = closestT;	

@@ -29,7 +29,7 @@ public:
 		Sphere_2.Roughness = { 1.0f };
 
 		Material& Sphere_3 = m_Scene.Material.emplace_back();
-		Sphere_3.Albedo = { 255.0f, 113.0f, 89.0f };
+		Sphere_3.Albedo = { 1.0f, 0.443f, 0.349f };
 		Sphere_3.Roughness = { 1.0f };
 		Sphere_3.EmissionColor = Sphere_3.Albedo;
 		Sphere_3.EmissionStrength = 2.0f;
@@ -68,14 +68,17 @@ public:
 	virtual void OnUIRender() override
 	{
 		ImGui::Begin("Settings");
-		if (ImGui::Button("Render")) {
-			Render();
-		};
-
-		ImGui::Checkbox("Accumulate", &m_Renderer.GetSettings().Accumulate);
+			if (ImGui::ColorEdit3("Sky Color", glm::value_ptr(m_Renderer.GetSettings().SkyColor))) 
+			{
+				m_Renderer.ResetFrameIndex();			
+			}
+		if(ImGui::Checkbox("Accumulate", &m_Renderer.GetSettings().Accumulate))
+		{
+			m_Renderer.ResetFrameIndex();
+		}
 
 		if (ImGui::Button("Reset")) {
-			m_Renderer.ResetFrameIndex();
+		m_Renderer.ResetFrameIndex();
 		};
 		ImGui::End();
 
@@ -99,10 +102,12 @@ public:
 			ImGui::PushID(i);
 			Material& material = m_Scene.Material[i];
 			ImGui::ColorEdit3("Albedo", glm::value_ptr(material.Albedo));
-			ImGui::DragFloat("Roughness", &material.Roughness,0.05f,0.0f,1.0f);
+			ImGui::DragFloat("Roughness", &material.Roughness, 0.05f, 0.0f, 1.0f);
 			ImGui::DragFloat("Metallic", &material.Metallic, 0.05f, 0.0f, 1.0f);
 			ImGui::ColorEdit3("Emission_Color", glm::value_ptr(material.EmissionColor));
 			ImGui::DragFloat("Emission_Strength", &material.EmissionStrength, 0.05f, 0.0f, FLT_MAX);
+			if (ImGui::Checkbox("Emission Enabled", &material.EmissionEnabled))
+				m_Renderer.ResetFrameIndex();
 
 			ImGui::Separator();
 			ImGui::PopID();

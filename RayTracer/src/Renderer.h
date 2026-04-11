@@ -17,6 +17,8 @@ public:
 	struct Settings
 	{
 		bool Accumulate = true;
+		bool EnableEmission = true;
+		glm::vec3 SkyColor = glm::vec3(0.53f, 0.81f, 0.98f);
 	};
 
 

@@ -9,8 +9,11 @@ struct Material
 	float Metallic = 0.0f;
 	glm::vec3 EmissionColor{ 0.0f };
 	float EmissionStrength = 0.0f;
+	bool EmissionEnabled = true;
 
-	glm::vec3 GetEmission() const { return EmissionColor * EmissionStrength; }
+	glm::vec3 GetEmission() const {
+		return EmissionEnabled ? EmissionColor * EmissionStrength : glm::vec3(0.0f);
+	}
 
 };
 
