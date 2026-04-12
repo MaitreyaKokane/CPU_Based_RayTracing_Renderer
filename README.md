@@ -24,10 +24,11 @@ KEY FEATURES (CURRENT / INTENDED)
 - Easy iteration using Premake + Visual Studio solution generation
 
   <img width="694" height="533" alt="image" src="https://github.com/user-attachments/assets/27fbc6ad-658e-45a7-b3b2-dad6e574fef7" />
+  Metallic Material along with emissive material simulation 
   
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
   
-  <img width="838" height="519" alt="Screenshot 2026-04-12 033317" src="https://github.com/user-attachments/assets/c07699f2-2c09-4e78-9371-f3beff5819f6" />
+  <img width="838" height="519" alt="Screenshot 2026-04-12 033317" src="https://github.com/user-attachments/assets/c07699f2-2c09-4e78-9371-f3beff5819f6" /> 
 
 
 Note:
