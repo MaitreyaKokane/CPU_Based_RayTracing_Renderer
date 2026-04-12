@@ -11,7 +11,6 @@
 #include "Scene.h"
 
 using namespace Walnut;
-using namespace std;
 
 class ExampleLayer : public Walnut::Layer
 {

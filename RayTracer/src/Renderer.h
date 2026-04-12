@@ -9,7 +9,6 @@
 #include "Ray.h"
 #include "Scene.h"
 
-using namespace std;
 
 class Renderer
 {
@@ -61,4 +60,6 @@ private:
 	glm::vec4* m_AccumulateData = nullptr;
 
 	uint32_t m_FrameIndex = 1;
+	uint32_t m_ImageWidth = 0;
+	uint32_t m_ImageHeight = 0;
 };
